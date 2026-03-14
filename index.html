@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opportunities Hub</title>
+<style>
+  /* ─── GOOGLE FONTS ─────────────────────────────────── */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  /* ─── DESIGN TOKENS ────────────────────────────────── */
+  :root {
+    --bg:        #f5f4f0;
+    --surface:   #ffffff;
+    --border:    #e2e0d8;
+    --border2:   #ccc9be;
+    --text:      #1a1916;
+    --muted:     #6b6960;
+    --accent:    #2d5be3;
+    --accent-bg: #eef1fc;
+    --green:     #166534;
+    --green-bg:  #dcfce7;
+    --amber:     #92400e;
+    --amber-bg:  #fef3c7;
+    --red:       #991b1b;
+    --red-bg:    #fee2e2;
+    --gray:      #374151;
+    --gray-bg:   #f3f4f6;
+    --radius:    10px;
+    --radius-sm: 6px;
+    --font: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  /* ─── RESET ────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ─── LAYOUT ───────────────────────────────────────── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  /* ─── HEADER ───────────────────────────────────────── */
+  header {
+    padding: 2.25rem 0 1.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; }
+  .header-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .total-pill {
+    font-size: 12px; font-weight: 500; background: var(--accent-bg);
+    color: var(--accent); padding: 4px 12px; border-radius: 99px;
+    border: 1px solid #c3cffa;
+  }
+
+  /* ─── TABS ─────────────────────────────────────────── */
+  nav.tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    font-weight: 600;
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+  .tab .count {
+    font-size: 11px;
+    font-weight: 400;
+    color: inherit;
+    opacity: 0.55;
+    margin-left: 4px;
+  }
+
+  /* ─── FILTER BAR ────────────────────────────────────── */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .filters input, .filters select {
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .filters input:focus, .filters select:focus { border-color: var(--accent); }
+  .filters input { flex: 1 1 180px; min-width: 140px; }
+  .filters select { flex: 0 1 140px; appearance: none; cursor: pointer; padding-right: 26px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6960' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center; }
+  .btn-clear {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--red);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 7px 4px;
+    display: none;
+  }
+  .btn-clear:hover { text-decoration: underline; }
+
+  /* ─── RESULTS META ──────────────────────────────────── */
+  .meta {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 10px 0 4px;
+  }
+
+  /* ─── PROGRAM GRID ──────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  /* ─── CARD ──────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .card-org {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .card-name {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 99px;
+    border: 1px solid transparent;
+  }
+  .b-free   { background: var(--green-bg); color: var(--green); border-color: #a7f3b8; }
+  .b-aid    { background: var(--accent-bg); color: var(--accent); border-color: #c3cffa; }
+  .b-paid   { background: var(--gray-bg); color: var(--gray); border-color: var(--border); }
+  .b-urgent { background: var(--red-bg); color: var(--red); border-color: #fca5a5; }
+  .b-soon   { background: var(--amber-bg); color: var(--amber); border-color: #fcd34d; }
+  .b-ok     { background: var(--gray-bg); color: var(--gray); border-color: var(--border); }
+  .b-closed { background: #f3f4f6; color: #9ca3af; border-color: var(--border); }
+  .b-rolling{ background: var(--gray-bg); color: var(--gray); border-color: var(--border); }
+  .card-details {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .card-link {
+    display: block;
+    margin-top: 2px;
+    padding: 7px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .card-link:hover { background: var(--surface); border-color: var(--border2); }
+
+  /* ─── EMPTY STATE ───────────────────────────────────── */
+  .empty {
+    grid-column: 1 / -1;
+    padding: 3rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty button {
+    background: none; border: none; font-family: var(--font);
+    font-size: 14px; color: var(--accent); cursor: pointer; text-decoration: underline;
+  }
+
+  /* ─── RESPONSIVE ────────────────────────────────────── */
+  @media (max-width: 600px) {
+    h1 { font-size: 22px; }
+    .grid { grid-template-columns: 1fr; }
+    .tab { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1>Opportunities Hub</h1>
+        <p class="header-sub">Programs, scholarships &amp; experiences for high school students</p>
+      </div>
+      <span class="total-pill" id="total-pill"></span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="filters">
+    <input  type="text" id="fq" placeholder="Search programs, organizations..." />
+    <select id="fg">
+      <option value="">All grades</option>
+      <option value="9">9th grade</option>
+      <option value="10">10th grade</option>
+      <option value="11">11th grade</option>
+      <option value="12">12th grade</option>
+    </select>
+    <select id="fc">
+      <option value="">Any cost</option>
+      <option value="Free">Free</option>
+      <option value="Financial Aid Available">Financial aid available</option>
+      <option value="Paid">Paid</option>
+    </select>
+    <select id="fl" id="fl"></select>
+    <select id="fs">
+      <option value="deadline">Sort: deadline (soonest)</option>
+      <option value="name">Sort: A → Z</option>
+    </select>
+    <button class="btn-clear" id="btn-clear">✕ Clear filters</button>
+  </div>
+
+  <p class="meta" id="meta"></p>
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+/* ================================================================
+   ██████╗  █████╗ ████████╗ █████╗
+   ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+   ██║  ██║███████║   ██║   ███████║
+   ██║  ██║██╔══██║   ██║   ██╔══██║
+   ██████╔╝██║  ██║   ██║   ██║  ██║
+   ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+
+   HOW TO ADD A PROGRAM
+   ━━━━━━━━━━━━━━━━━━━━
+   1. Find the right section below (general, stem, precollege, or flyIn)
+   2. Copy an existing entry (the { ... } block including the trailing comma)
+   3. Paste it at the END of that section, before the closing ]
+   4. Fill in the fields:
+
+   name   → Full program name (string)
+   host   → Organization running it (string)
+   desc   → 1–2 sentence description (string)
+   grades → Array of eligible grade numbers, e.g. [10, 11, 12]
+   cost   → Exactly one of: "Free" | "Financial Aid Available" | "Paid"
+   loc    → Location string, e.g. "Boston, MA" or "National" or "Virtual"
+   dl     → Deadline in YYYY-MM-DD format, e.g. "2026-05-15"
+             Leave as null if rolling / no deadline
+   url    → Full URL including https://
+
+   SECTIONS
+   ━━━━━━━━
+   general   → Tab 1: General scholarships & leadership programs
+   stem      → Tab 2: STEM research & technical programs
+   precollege→ Tab 3: Pre-college / university summer programs
+   flyIn     → Tab 4: Fly-in campus visit programs
+
+================================================================ */
+
+const DATA = {
+
+  /* ── TAB 1: GENERAL ──────────────────────────────────────────── */
+  general: [
+    {
+      name:   "QuestBridge National College Match",
+      host:   "QuestBridge",
+      desc:   "Connects high-achieving students from low-income backgrounds with full four-year scholarships to 50+ top colleges. One of the most prestigious scholarship programs in the nation.",
+      grades: [11, 12],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-09-26",
+      url:    "https://www.questbridge.org"
+    },
+    {
+      name:   "Posse Foundation",
+      host:   "Posse Foundation",
+      desc:   "Identifies public high school students with extraordinary leadership potential and sends them in multicultural teams to top colleges with full-tuition scholarships.",
+      grades: [12],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-10-15",
+      url:    "https://www.possefoundation.org"
+    },
+    {
+      name:   "Jack Kent Cooke Young Scholars",
+      host:   "Jack Kent Cooke Foundation",
+      desc:   "Multi-year scholarship for high-achieving students with financial need. Provides funding, mentoring, and college counseling from 8th grade through college.",
+      grades: [9, 10, 11, 12],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-04-20",
+      url:    "https://www.jkcf.org"
+    },
+    {
+      name:   "HOBY Leadership Seminar",
+      host:   "Hugh O'Brian Youth Leadership",
+      desc:   "Statewide leadership seminar for 10th graders developing civic responsibility and leadership skills through intensive workshops and community service.",
+      grades: [10],
+      cost:   "Free",
+      loc:    "Various states",
+      dl:     "2026-04-01",
+      url:    "https://www.hoby.org"
+    },
+    {
+      name:   "Boys State / Girls State",
+      host:   "American Legion",
+      desc:   "Highly competitive week-long summer program where students form a mock state government. Strong recognition for college applications and civic leadership.",
+      grades: [11],
+      cost:   "Free",
+      loc:    "State-based",
+      dl:     "2026-03-30",
+      url:    "https://www.legion.org/boysnation"
+    },
+    {
+      name:   "National Merit Scholarship Program",
+      host:   "National Merit Scholarship Corp.",
+      desc:   "Academic competition based on PSAT scores taken in junior year. Semi-finalists and finalists may receive substantial scholarships from corporations and colleges nationwide.",
+      grades: [11],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-09-01",
+      url:    "https://www.nationalmerit.org"
+    },
+    /* ── ADD MORE GENERAL PROGRAMS BELOW THIS LINE ── */
+
+  ],
+
+  /* ── TAB 2: STEM ─────────────────────────────────────────────── */
+  stem: [
+    {
+      name:   "Research Science Institute (RSI)",
+      host:   "Center for Excellence in Education / MIT",
+      desc:   "The most prestigious free STEM research program for high schoolers. Six-week summer at MIT conducting independent research with university mentors. Approximately 2% acceptance rate.",
+      grades: [11],
+      cost:   "Free",
+      loc:    "Cambridge, MA",
+      dl:     "2026-12-15",
+      url:    "https://www.cee.org/rsi"
+    },
+    {
+      name:   "MIT PRIMES",
+      host:   "MIT",
+      desc:   "Year-long research program for high school students working alongside MIT researchers on advanced mathematics and CS. PRIMES-USA allows remote participation.",
+      grades: [9, 10, 11],
+      cost:   "Free",
+      loc:    "Cambridge, MA / Remote",
+      dl:     "2026-12-01",
+      url:    "https://math.mit.edu/research/highschool/primes/"
+    },
+    {
+      name:   "Regeneron Science Talent Search",
+      host:   "Society for Science",
+      desc:   "The nation's oldest and most prestigious science and math competition for high school seniors. Top prize is $250,000. Submit an original research project for national recognition.",
+      grades: [12],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-11-13",
+      url:    "https://www.societyforscience.org/regeneron-sts/"
+    },
+    {
+      name:   "Girls Who Code Summer Immersion",
+      host:   "Girls Who Code",
+      desc:   "Free 2-week intensive coding program at leading tech companies for girls. Learn CS fundamentals and build a portfolio project. Both virtual and in-person locations available.",
+      grades: [9, 10, 11],
+      cost:   "Free",
+      loc:    "Various cities / Virtual",
+      dl:     "2026-04-15",
+      url:    "https://girlswhocode.com"
+    },
+    {
+      name:   "COSMOS",
+      host:   "University of California System",
+      desc:   "Intensive four-week residential STEM program at UC campuses for talented students. Choose a cluster course led by university faculty. Need-based aid offered.",
+      grades: [9, 10, 11, 12],
+      cost:   "Financial Aid Available",
+      loc:    "California",
+      dl:     "2026-04-15",
+      url:    "https://cosmos-ucop.ucdavis.edu"
+    },
+    {
+      name:   "PROMYS at Boston University",
+      host:   "Boston University",
+      desc:   "Intensive six-week summer program in number theory for mathematically talented students. One of the most rigorous math programs available for high schoolers. Need-based aid offered.",
+      grades: [9, 10, 11, 12],
+      cost:   "Financial Aid Available",
+      loc:    "Boston, MA",
+      dl:     "2026-03-01",
+      url:    "https://promys.org"
+    },
+    {
+      name:   "iD Tech Camps",
+      host:   "iD Tech",
+      desc:   "Week-long summer programs in coding, game design, AI, and cybersecurity hosted at top university campuses. Multiple disciplines and session dates available nationwide.",
+      grades: [9, 10, 11, 12],
+      cost:   "Paid",
+      loc:    "Multiple campuses",
+      dl:     "2026-06-01",
+      url:    "https://www.idtech.com"
+    },
+    /* ── ADD MORE STEM PROGRAMS BELOW THIS LINE ── */
+
+  ],
+
+  /* ── TAB 3: PRE-COLLEGE ──────────────────────────────────────── */
+  precollege: [
+    {
+      name:   "Yale Young Global Scholars",
+      host:   "Yale University",
+      desc:   "Intensive academic enrichment and leadership program for outstanding high school students. Two-week residential sessions across multiple disciplines on Yale's campus.",
+      grades: [10, 11, 12],
+      cost:   "Financial Aid Available",
+      loc:    "New Haven, CT",
+      dl:     "2026-02-05",
+      url:    "https://globalscholars.yale.edu"
+    },
+    {
+      name:   "Columbia University Summer Immersion",
+      host:   "Columbia University",
+      desc:   "College-level courses at Columbia for high school students. Choose from 3-week or 6-week programs across 75+ subjects in STEM, business, arts, and social sciences.",
+      grades: [9, 10, 11, 12],
+      cost:   "Paid",
+      loc:    "New York, NY",
+      dl:     "2026-05-01",
+      url:    "https://precollege.sps.columbia.edu"
+    },
+    {
+      name:   "Stanford Pre-Collegiate Summer Institutes",
+      host:   "Stanford University",
+      desc:   "Three-week intensive residential program for intellectually curious students. Deep coursework in mathematics, science, humanities, and social sciences with Stanford faculty.",
+      grades: [9, 10, 11, 12],
+      cost:   "Paid",
+      loc:    "Stanford, CA",
+      dl:     "2026-03-15",
+      url:    "https://summerinstitutes.spcs.stanford.edu"
+    },
+    {
+      name:   "Harvard Secondary School Program",
+      host:   "Harvard University",
+      desc:   "Take college-level Harvard courses alongside undergraduates during a 7-week summer session. Commuter or residential options available. Highly rigorous curriculum.",
+      grades: [10, 11, 12],
+      cost:   "Paid",
+      loc:    "Cambridge, MA",
+      dl:     "2026-04-01",
+      url:    "https://summer.harvard.edu/high-school-programs/"
+    },
+    {
+      name:   "Penn Pre-College Programs",
+      host:   "University of Pennsylvania",
+      desc:   "Multiple programs including summer residential experience and the Wharton Leadership track. Earn college credit at one of the nation's most respected research universities.",
+      grades: [9, 10, 11, 12],
+      cost:   "Paid",
+      loc:    "Philadelphia, PA",
+      dl:     "2026-04-15",
+      url:    "https://www.precollege.sas.upenn.edu"
+    },
+    {
+      name:   "Johns Hopkins CTY",
+      host:   "Johns Hopkins University",
+      desc:   "Academically intensive residential programs for gifted students in STEM, humanities, and writing at multiple campus locations. Need-based financial aid available.",
+      grades: [9, 10, 11, 12],
+      cost:   "Financial Aid Available",
+      loc:    "Multiple campuses",
+      dl:     "2026-03-01",
+      url:    "https://cty.jhu.edu"
+    },
+    {
+      name:   "Brown Pre-College Programs",
+      host:   "Brown University",
+      desc:   "Summer programs including a pre-baccalaureate track to earn college credit, a leadership institute, and enrichment sessions. Fully immersive Ivy League residential experience.",
+      grades: [9, 10, 11, 12],
+      cost:   "Paid",
+      loc:    "Providence, RI",
+      dl:     "2026-04-30",
+      url:    "https://precollege.brown.edu"
+    },
+    /* ── ADD MORE PRE-COLLEGE PROGRAMS BELOW THIS LINE ── */
+    {
+  name:   "Adelphi Summer Pre-College Program",
+  host:   "Adelphi University",
+  desc:   "Options for college credit, leadership, residential, and day program experiences. Courses include art & technology, business, digital media, musical theater, nursing, psychology, video game programming, and more.",
+  grades: [10, 11, 12],
+  cost:   "Paid",
+  loc:    "Garden City, NY",
+  dl:     null,
+  url:    "https://www.precollege.adelphi.edu/"
+},
+{
+  name:   "Pre-College Summer Program",
+  host:   "Colorado College",
+  desc:   "Live on campus and take courses ranging from environmental science and epidemics to marketing, entrepreneurship, and cross-genre writing. Full residential college experience for rising juniors and seniors.",
+  grades: [11, 12],
+  cost:   "Paid",
+  loc:    "Colorado Springs, CO",
+  dl:     null,
+  url:    "https://www.coloradocollege.edu/offices/summersession/pre-college/"
+},
+{
+  name:   "Pre-College Summer Program",
+  host:   "Emory University",
+  desc:   "Six-week credit and two-week non-credit summer courses offering an immersive academic experience at a top-ranked private university. Gives rising juniors and seniors a real look at college life.",
+  grades: [11, 12],
+  cost:   "Paid",
+  loc:    "Atlanta, GA",
+  dl:     null,
+  url:    "http://precollege.emory.edu/"
+},
+{
+  name:   "Hoya College Prep Summer",
+  host:   "Georgetown University",
+  desc:   "Spend 5 weeks on Georgetown's campus taking courses alongside undergraduates, attending faculty lectures, earning college credit, and developing test-taking strategies for the SAT and ACT.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Washington, D.C.",
+  dl:     null,
+  url:    "https://summer.georgetown.edu/programs/SHS05/college-preparatory-program/how-to-apply"
+},
+{
+  name:   "Pre-College Programs",
+  host:   "Johns Hopkins University",
+  desc:   "10-week, 5-week, and 2-week summer programs in Engineering, Public Health, International Studies, and Medicine — online or on campus — to explore college-level coursework and majors.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Baltimore, MD / Online",
+  dl:     null,
+  url:    "https://www.jhu.edu/academics/summer-programs/"
+},
+{
+  name:   "Harvard Pre-College Summer Program",
+  host:   "Harvard University",
+  desc:   "Academically rigorous summer program at Harvard allowing high school students to experience college-level coursework and campus life in Cambridge.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Cambridge, MA",
+  dl:     null,
+  url:    "https://summer.harvard.edu/high-school-programs/"
+},
+{
+  name:   "Pre-College Program",
+  host:   "Marist College",
+  desc:   "Earn college credits through more than 20 unique courses offered virtually or on campus in varying session lengths at Marist's beautiful Hudson River campus.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Poughkeepsie, NY / Online",
+  dl:     null,
+  url:    "https://www.marist.edu/admission/summer-pre-college"
+},
+{
+  name:   "Pre-College Program",
+  host:   "New York University",
+  desc:   "Study with world-class NYU faculty, connect with industry leaders, and earn college credits. Choose from more than a thousand courses alongside NYU students from around the world.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "New York, NY",
+  dl:     null,
+  url:    "https://www.nyu.edu/admissions/visiting-students/academics/summer.html"
+},
+{
+  name:   "Pre-College Programs",
+  host:   "University of Chicago",
+  desc:   "Take intellectual risks, dive deep into subject matter, and tackle questions that go beyond the high school curriculum at one of the world's top research universities.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Chicago, IL",
+  dl:     null,
+  url:    "https://summer.uchicago.edu/pre-college-students"
+},
+{
+  name:   "Academic Institutes & Summer Programs",
+  host:   "Alfred University",
+  desc:   "Wide range of summer programs including engineering, astronomy, darkroom photography, songwriting, high school portfolio design, ethical conflicts in scientific research, and more.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Alfred, NY",
+  dl:     null,
+  url:    "https://www.alfred.edu/about/summers-at-alfred/summer-camps/"
+},
+{
+  name:   "Summer Challenge Program",
+  host:   "Boston University",
+  desc:   "Two-week residential program where students enroll in two non-credit seminars across subjects like psychology, creative writing, engineering, journalism, law, and philosophy.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Boston, MA",
+  dl:     null,
+  url:    "https://www.bu.edu/summer/high-school-programs/"
+},
+{
+  name:   "High School Honors Program",
+  host:   "Boston University",
+  desc:   "Six-week residential or commuter program where students take two actual undergraduate courses for college credit — a genuine preview of BU academics and campus life.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Boston, MA",
+  dl:     null,
+  url:    "https://www.bu.edu/summer/high-school-programs/high-school-honors/"
+},
+{
+  name:   "Summer Experience Program",
+  host:   "Boston University",
+  desc:   "Two-week residential program for rising seniors. Explore abnormal psychology, business, creative writing, journalism, law, infectious diseases, and more. Applications open December 15th.",
+  grades: [11, 12],
+  cost:   "Paid",
+  loc:    "Boston, MA",
+  dl:     null,
+  url:    "https://www.bu.edu/summer/highschool"
+},
+{
+  name:   "Summer@Brown",
+  host:   "Brown University",
+  desc:   "On- and off-campus summer programs for grades 9–12, including Leadership Institute and STEM tracks. Includes global off-campus programs through the CDC On Location series.",
+  grades: [9, 10, 11, 12],
+  cost:   "Financial Aid Available",
+  loc:    "Providence, RI",
+  dl:     null,
+  url:    "https://precollege.brown.edu/programs/summerbrown"
+},
+{
+  name:   "Summer High School Program",
+  host:   "Columbia University",
+  desc:   "NYC: arts, sciences, law, and business for grades 9–11. Barcelona: art, architecture, and Spanish culture for grades 10–12. Online: U.S. Constitutional Law for grades 9–12. Multiple formats available.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "New York, NY / Barcelona / Online",
+  dl:     null,
+  url:    "https://precollege.sps.columbia.edu/programs/summer-programs"
+},
+{
+  name:   "NYC Commuter Summer Program",
+  host:   "Columbia University",
+  desc:   "Choose from over 70 courses with a structured daily schedule five days a week. Earn a Columbia certification of participation upon completion. Students arrange their own housing.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "New York, NY",
+  dl:     null,
+  url:    "https://precollege.sps.columbia.edu/admissions/applying-pre-college-programs"
+},
+{
+  name:   "Summer Session Credit Courses",
+  host:   "Duke University",
+  desc:   "Take undergraduate courses online or on campus with Duke professors for real college credit. Open to rising juniors and seniors (must be 16 by June 30). Runs June 30 – August 11.",
+  grades: [11, 12],
+  cost:   "Paid",
+  loc:    "Durham, NC / Online",
+  dl:     null,
+  url:    "https://summersession.duke.edu/credit-course-options"
+},
+{
+  name:   "Summer Accelerate Pre-College Programs",
+  host:   "Northeastern University",
+  desc:   "Innovative summer programs led by Northeastern's internationally recognized faculty for high school students seeking an academic edge in research, technology, business, and beyond.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Boston, MA",
+  dl:     null,
+  url:    "https://precollegeprograms.northeastern.edu/"
+},
+{
+  name:   "Pre-College Program",
+  host:   "Pratt Institute",
+  desc:   "Summer programs in architecture, art and design, creative writing, fashion design, photography, graphic design, and more for rising sophomores, juniors, and seniors.",
+  grades: [10, 11, 12],
+  cost:   "Paid",
+  loc:    "Brooklyn, NY",
+  dl:     null,
+  url:    "https://www.pratt.edu/continuing-and-professional-studies/precollege/summer-precollege/"
+},
+{
+  name:   "Pre-College Programs in Visual Arts and Design",
+  host:   "Rhode Island School of Design",
+  desc:   "Live and study like a RISD student for five weeks. Majors in animation, architecture, comic art, film, game design, illustration, photography, and more. Scholarships available. Must have completed 10th or 11th grade.",
+  grades: [11, 12],
+  cost:   "Financial Aid Available",
+  loc:    "Providence, RI",
+  dl:     null,
+  url:    "https://precollege.risd.edu/program-overview/"
+},
+{
+  name:   "PreCollege at Ringling",
+  host:   "Ringling College of Art + Design",
+  desc:   "Four-week intensive summer program for artists and designers to deepen skills, build a college portfolio, and receive hands-on instruction from world-class faculty in Sarasota.",
+  grades: [11, 12],
+  cost:   "Paid",
+  loc:    "Sarasota, FL",
+  dl:     null,
+  url:    "https://www.ringling.edu/academics/precollege/#2025-program"
+},
+{
+  name:   "Pre-College Program in the Liberal and Studio Arts",
+  host:   "Skidmore College",
+  desc:   "Credit-bearing experience introducing high school students to authentic college life — real classes, real credits, and real residential life at a creative liberal arts college.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Saratoga Springs, NY",
+  dl:     null,
+  url:    "https://www.skidmore.edu/precollege/"
+},
+{
+  name:   "Pre-College Program",
+  host:   "Sotheby's Institute of Art",
+  desc:   "Two-week courses in running galleries and museums, painting, and art history. Live in NYU dorms while immersed in the New York City art world.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "New York, NY",
+  dl:     null,
+  url:    "https://www.sothebysinstitute.com/precollege"
+},
+{
+  name:   "Pre-College Programs",
+  host:   "Stevens Institute of Technology",
+  desc:   "Pre-college programs in business, civil engineering, cybersecurity, game design, VR, electronic music production, pre-law STEM, pre-med biology, and biomedical engineering.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Hoboken, NJ",
+  dl:     null,
+  url:    "https://www.stevens.edu/admission-aid/pre-college-programs"
+},
+{
+  name:   "Summer High School Programs",
+  host:   "Stony Brook University",
+  desc:   "Hands-on research experiences and credit-bearing summer courses in sciences, engineering, and filmmaking. Jump-start your college career at a top public research university.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Stony Brook, NY",
+  dl:     null,
+  url:    "https://www.stonybrook.edu/undergraduate-admissions/info-for/pre-college-programs.php"
+},
+{
+  name:   "Summer Discovery Pre-College Program",
+  host:   "Summer Discovery",
+  desc:   "2–6 weeks at 22 campuses across the U.S. and U.K. with 300+ courses in visual arts, business, medicine, computer science, and law. Includes cultural immersion programs in Spain, Italy, and Costa Rica.",
+  grades: [9, 10, 11, 12],
+  cost:   "Paid",
+  loc:    "Multiple campuses",
+  dl:     null,
+  url:    "https://www.summerdiscovery.com/offerings/high-school"
+},
+
+  ],
+
+  /* ── TAB 4: FLY-IN PROGRAMS ──────────────────────────────────── */
+  flyIn: [
+    {
+      name:   "QuestBridge College Prep Scholars",
+      host:   "QuestBridge",
+      desc:   "Selective fall program pairing high-achieving, low-income juniors with top college partners. Includes fully funded fly-in campus visits and comprehensive college prep resources.",
+      grades: [11],
+      cost:   "Free",
+      loc:    "National",
+      dl:     "2026-09-26",
+      url:    "https://www.questbridge.org/high-school-students/college-prep-scholars"
+    },
+    {
+      name:   "Dartmouth Dimensions",
+      host:   "Dartmouth College",
+      desc:   "Fly-in for first-generation, low-income, and underrepresented students accepted to Dartmouth. Fully funded campus visit to connect with student life and explore financial aid.",
+      grades: [12],
+      cost:   "Free",
+      loc:    "Hanover, NH",
+      dl:     "2026-04-15",
+      url:    "https://admissions.dartmouth.edu/visit/dimensions-dartmouth"
+    },
+    {
+      name:   "Discover Hopkins",
+      host:   "Johns Hopkins University",
+      desc:   "Two-day fly-in for high-achieving students from underrepresented backgrounds. Explore JHU's campus, attend classes, and learn about research opportunities and financial aid.",
+      grades: [11, 12],
+      cost:   "Free",
+      loc:    "Baltimore, MD",
+      dl:     "2026-10-15",
+      url:    "https://apply.jhu.edu/discover-hopkins/"
+    },
+    {
+      name:   "Vanderbilt Project Inclusion",
+      host:   "Vanderbilt University",
+      desc:   "Fully funded fly-in for first-generation and low-income students. All travel, housing, and meals covered. An authentic look at Vanderbilt academics and campus culture.",
+      grades: [11, 12],
+      cost:   "Free",
+      loc:    "Nashville, TN",
+      dl:     "2026-10-01",
+      url:    "https://admissions.vanderbilt.edu/visit/project-inclusion/"
+    },
+    {
+      name:   "Rice Owl Days",
+      host:   "Rice University",
+      desc:   "Fly-in for underrepresented and first-generation prospective students. Attend classes, meet professors, and stay overnight with current students at no cost.",
+      grades: [11, 12],
+      cost:   "Free",
+      loc:    "Houston, TX",
+      dl:     "2026-11-01",
+      url:    "https://futureowls.rice.edu"
+    },
+    {
+      name:   "UChicago Metcalf Scholars",
+      host:   "University of Chicago",
+      desc:   "Fly-in for academically exceptional, first-generation, or underrepresented students. Two nights on campus with classes, tours, and faculty and student panels.",
+      grades: [11, 12],
+      cost:   "Free",
+      loc:    "Chicago, IL",
+      dl:     "2026-11-15",
+      url:    "https://collegeadmissions.uchicago.edu/visit/fly-in"
+    },
+    {
+      name:   "Cornell Diversity Fly-In",
+      host:   "Cornell University",
+      desc:   "Multiday fully funded fly-in experience for first-generation, low-income, and underrepresented prospective students. All travel, lodging, and meals provided at no cost.",
+      grades: [12],
+      cost:   "Free",
+      loc:    "Ithaca, NY",
+      dl:     "2026-10-20",
+      url:    "https://admissions.cornell.edu"
+    },
+    /* ── ADD MORE FLY-IN PROGRAMS BELOW THIS LINE ── */
+  {
+  name:   "Access to Amherst",
+  host:   "Amherst College",
+  desc:   "Fully funded fly-in program for prospective students from underrepresented and low-income backgrounds to experience campus life and academics at Amherst.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Amherst, MA",
+  dl:     null,
+  url:    "https://www.amherst.edu/admission/diversity/a2a"
+},
+{
+  name:   "Access Babson",
+  host:   "Babson College",
+  desc:   "Fly-in program inviting first-generation and underrepresented students to explore Babson's entrepreneurship-focused campus and community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Wellesley, MA",
+  dl:     null,
+  url:    "https://www.babson.edu/undergraduate/admission/visit-and-engage/access-babson/"
+},
+{
+  name:   "Barnard Bound",
+  host:   "Barnard College",
+  desc:   "Overnight fly-in experience for prospective students from underrepresented backgrounds to explore Barnard's campus, academics, and community in New York City.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "New York, NY",
+  dl:     null,
+  url:    "https://barnard.edu/admissions/commitment-to-access"
+},
+{
+  name:   "Prologue to Bates",
+  host:   "Bates College",
+  desc:   "Free campus visit program for first-generation and underrepresented prospective students to experience Bates academics, student life, and financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Lewiston, ME",
+  dl:     null,
+  url:    "https://www.bates.edu/admission/prologue/"
+},
+{
+  name:   "Explore Bowdoin",
+  host:   "Bowdoin College",
+  desc:   "Overnight diversity fly-in program offering underrepresented students an immersive look at Bowdoin's campus, classes, and close-knit community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Brunswick, ME",
+  dl:     null,
+  url:    "https://www.bowdoin.edu/admissions/visit/explore-bowdoin/"
+},
+{
+  name:   "SEED",
+  host:   "Brandeis University",
+  desc:   "Students Exploring and Experiencing Diversity — a fly-in program at Brandeis for prospective students from underrepresented and low-income backgrounds.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Waltham, MA",
+  dl:     null,
+  url:    "https://www.brandeis.edu/admissions/visit/seed/index.html"
+},
+{
+  name:   "Travel Scholars & Road Scholars",
+  host:   "Bryn Mawr College",
+  desc:   "Fly-in and travel reimbursement programs for prospective students with financial need to visit Bryn Mawr's campus and experience its women's college community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Bryn Mawr, PA",
+  dl:     null,
+  url:    "https://www.brynmawr.edu/admissions-aid/visit-bryn-mawr/fly-programs"
+},
+{
+  name:   "Journey to Bucknell",
+  host:   "Bucknell University",
+  desc:   "Fully funded campus visit program for underrepresented and first-generation prospective students to explore Bucknell's academics, student life, and support resources.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Lewisburg, PA",
+  dl:     null,
+  url:    "https://www.bucknell.edu/meet-bucknell/plan-visit/camps-conferences-visit-programs/journey-bucknell"
+},
+{
+  name:   "Caltech Up Close",
+  host:   "California Institute of Technology",
+  desc:   "Fall fly-in program for high-achieving underrepresented students to experience Caltech's research culture, faculty, and tight-knit STEM community up close.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Pasadena, CA",
+  dl:     null,
+  url:    "https://www.admissions.caltech.edu/visit/visit-campus/fall-fly-in-program-caltech-up-close"
+},
+{
+  name:   "Summer Preview: Women in STEM",
+  host:   "California Institute of Technology",
+  desc:   "Caltech's fly-in specifically for young women passionate about science and engineering to explore campus resources, labs, and the STEM community at Caltech.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Pasadena, CA",
+  dl:     null,
+  url:    "https://www.admissions.caltech.edu/visit/visit-campus/summer-preview-women-stem"
+},
+{
+  name:   "Taste of Carleton",
+  host:   "Carleton College",
+  desc:   "Overnight fly-in for prospective students from underrepresented communities to attend classes, meet faculty, and get a genuine feel for life at Carleton.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Northfield, MN",
+  dl:     null,
+  url:    "https://www.carleton.edu/admissions/visit/toc/"
+},
+{
+  name:   "Diversity Overnight",
+  host:   "Case Western Reserve University",
+  desc:   "Funded overnight campus visit for underrepresented and first-generation prospective students to explore Case Western's academics, research, and campus community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Cleveland, OH",
+  dl:     null,
+  url:    "https://case.edu/admission/diversity-overnight"
+},
+{
+  name:   "Fall Preview",
+  host:   "Claremont McKenna College",
+  desc:   "Diversity fly-in program inviting underrepresented students to experience CMC's campus, leadership-focused academics, and vibrant Claremont Consortium community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Claremont, CA",
+  dl:     null,
+  url:    "http://cmc.edu/admission/visit/diversityflyin"
+},
+{
+  name:   "Colgate in Focus",
+  host:   "Colgate University",
+  desc:   "A diversity open house and fly-in for underrepresented prospective students to meet faculty, attend classes, and explore Colgate's campus and financial aid offerings.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Hamilton, NY",
+  dl:     null,
+  url:    "https://www.colgate.edu/admission-aid/visit/colgate-focus"
+},
+{
+  name:   "Fall Fly-In",
+  host:   "College of the Atlantic",
+  desc:   "Fully funded fall fly-in for prospective students interested in College of the Atlantic's unique human ecology curriculum and tight-knit coastal Maine campus.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Bar Harbor, ME",
+  dl:     null,
+  url:    "https://www.coa.edu/admissions/admission-events/fall-fly-in/"
+},
+{
+  name:   "Perspectives Overnight Program",
+  host:   "College of the Holy Cross",
+  desc:   "Overnight fly-in program for underrepresented prospective students to experience Holy Cross academics, campus culture, and its Jesuit community firsthand.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Worcester, MA",
+  dl:     null,
+  url:    "https://www.holycross.edu/perspectives-overnight-program"
+},
+{
+  name:   "Experience Colorado College",
+  host:   "Colorado College",
+  desc:   "Fly-in for underrepresented and first-generation students to experience CC's distinctive Block Plan, campus life, and the Colorado outdoors.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Colorado Springs, CO",
+  dl:     null,
+  url:    "https://www.coloradocollege.edu/admission/for-students/explore-campus/open-house-opportunities/experience_colorado_college/experience-colorado-college.html"
+},
+{
+  name:   "Columbia Engineering Experience",
+  host:   "Columbia University",
+  desc:   "Fly-in program for underrepresented students interested in engineering at Columbia, including lab tours, faculty panels, and an overnight stay with current students.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "New York, NY",
+  dl:     null,
+  url:    "https://undergrad.admissions.columbia.edu/engineering-preview-columbia"
+},
+{
+  name:   "Explore Weekend",
+  host:   "Connecticut College",
+  desc:   "Funded overnight visit program for underrepresented and first-generation prospective students to explore Conn College's academics, campus, and financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "New London, CT",
+  dl:     null,
+  url:    "https://www.conncoll.edu/explore-weekend/"
+},
+{
+  name:   "Dartmouth Bound Summer Program",
+  host:   "Dartmouth College",
+  desc:   "Multi-day summer fly-in for underrepresented and first-generation students to immerse themselves in Dartmouth's academic culture and vibrant campus community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Hanover, NH",
+  dl:     null,
+  url:    "https://admissions.dartmouth.edu/visit/visitation-programs/dartmouth-bound-summer-program"
+},
+{
+  name:   "Indigenous Fly-In Program",
+  host:   "Dartmouth College",
+  desc:   "Dedicated fly-in program for Indigenous prospective students to connect with Dartmouth's Native American community, faculty, and campus resources.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Hanover, NH",
+  dl:     null,
+  url:    "https://admissions.dartmouth.edu/visit/visitation-programs/indigenous-fly-program"
+},
+{
+  name:   "Access Davidson",
+  host:   "Davidson College",
+  desc:   "Fully funded fly-in for underrepresented and first-generation prospective students to experience Davidson's liberal arts environment, faculty, and generous financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Davidson, NC",
+  dl:     null,
+  url:    "https://www.davidson.edu/admission-and-financial-aid/visit/access-davidson"
+},
+{
+  name:   "Dialogue with Denison",
+  host:   "Denison University",
+  desc:   "Fly-in program welcoming multicultural and underrepresented students to engage with Denison's campus, multicultural student life, and alumni community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Granville, OH",
+  dl:     null,
+  url:    "https://denison.edu/campus/admission/dialogue-with-denison"
+},
+{
+  name:   "Discover Diversity at Dickinson",
+  host:   "Dickinson College",
+  desc:   "Fly-in and virtual program for diverse students and those from rural communities to explore Dickinson's sustainability-focused academics and global curriculum.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Carlisle, PA",
+  dl:     null,
+  url:    "https://www.dickinson.edu/info/20255/visit/1058/discover_diversity_at_dickinson"
+},
+{
+  name:   "CORE — Cultural Overnight Recruitment Experience",
+  host:   "Emory University",
+  desc:   "Overnight fly-in for underrepresented prospective students to experience Emory's campus, diverse student body, research opportunities, and financial aid programs.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Atlanta, GA",
+  dl:     null,
+  url:    "https://apply.emory.edu/core/core.html"
+},
+{
+  name:   "Collegiate Leadership Summit",
+  host:   "Franklin & Marshall College",
+  desc:   "Fly-in leadership program for underrepresented students to develop skills and explore Franklin & Marshall's close-knit liberal arts community and campus resources.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Lancaster, PA",
+  dl:     null,
+  url:    "https://www.accessandequity.org/2959-2/"
+},
+{
+  name:   "Diversity Travel Opportunity",
+  host:   "Grinnell College",
+  desc:   "Fully funded campus visit for underrepresented prospective students to experience Grinnell's self-governed curriculum, social justice focus, and generous financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Grinnell, IA",
+  dl:     null,
+  url:    "https://www.grinnell.edu/admission/visit/on-campus/programs"
+},
+{
+  name:   "Home at Hamilton",
+  host:   "Hamilton College",
+  desc:   "Funded overnight visit for underrepresented and first-generation prospective students to explore Hamilton's open curriculum, faculty relationships, and campus community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Clinton, NY",
+  dl:     null,
+  url:    "https://www.hamilton.edu/admission/promise-program"
+},
+{
+  name:   "FAST — Future Achievers in Science and Technology",
+  host:   "Harvey Mudd College",
+  desc:   "Fly-in for underrepresented students with a passion for STEM to explore Harvey Mudd's rigorous engineering and science programs, research labs, and campus culture.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Claremont, CA",
+  dl:     null,
+  url:    "https://www.hmc.edu/admission/fast/"
+},
+{
+  name:   "WISTEM",
+  host:   "Harvey Mudd College",
+  desc:   "Harvey Mudd's fly-in program specifically for women interested in STEM to connect with current students, faculty, and resources supporting women in science and engineering.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Claremont, CA",
+  dl:     null,
+  url:    "https://www.hmc.edu/admission/wistem/"
+},
+{
+  name:   "Have-A-Look",
+  host:   "Haverford College",
+  desc:   "Overnight fly-in program for underrepresented and first-generation prospective students to experience Haverford's Honor Code community, academics, and campus.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Haverford, PA",
+  dl:     null,
+  url:    "https://www.haverford.edu/havealook"
+},
+{
+  name:   "Our Beloved Community",
+  host:   "Lafayette College",
+  desc:   "Fully funded fly-in for underrepresented and first-generation students to explore Lafayette's EXCEL Scholars program, campus life, and strong alumni network.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Easton, PA",
+  dl:     null,
+  url:    "https://admissions.lafayette.edu/our-beloved-community/"
+},
+{
+  name:   "Diversity Achievers Program",
+  host:   "Lehigh University",
+  desc:   "Fly-in program inviting underrepresented prospective students to explore Lehigh's STEM and business programs, research opportunities, and diverse campus community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Bethlehem, PA",
+  dl:     null,
+  url:    "https://www1.lehigh.edu/admissions/diversity-achievers-program"
+},
+{
+  name:   "WISE — Weekend Immersion in Science & Engineering",
+  host:   "MIT",
+  desc:   "MIT's fly-in for underrepresented students in science and engineering to attend classes, tour research labs, and connect with MIT students and faculty.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Cambridge, MA",
+  dl:     null,
+  url:    "https://mitadmissions.org/pages/wise/"
+},
+{
+  name:   "Bridges Program",
+  host:   "Miami University (Ohio)",
+  desc:   "Fully funded fly-in for underrepresented prospective students to explore Miami University's campus, academic programs, and student support resources.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Oxford, OH",
+  dl:     null,
+  url:    "http://www.miamioh.edu/admission/high-school/bridges/"
+},
+{
+  name:   "Discover Middlebury",
+  host:   "Middlebury College",
+  desc:   "Special fly-in visits for underrepresented and first-generation prospective students to experience Middlebury's environmental focus, language programs, and Vermont campus.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Middlebury, VT",
+  dl:     null,
+  url:    "https://www.middlebury.edu/college/admissions/visit-us/special-visits"
+},
+{
+  name:   "Sí Se Puede!",
+  host:   "Missouri University of Science and Technology",
+  desc:   "Fly-in program hosted by the Missouri S&T SHPE chapter for Latinx prospective students interested in STEM fields to explore campus, labs, and scholarships.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Rolla, MO",
+  dl:     null,
+  url:    "https://shpe.mst.edu/si-se-puede/"
+},
+{
+  name:   "Multicultural Visit Program (MVP)",
+  host:   "Oberlin College",
+  desc:   "Funded fly-in for multicultural and underrepresented prospective students to attend classes, stay with a current student, and explore Oberlin's arts and academics.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Oberlin, OH",
+  dl:     null,
+  url:    "https://www.oberlin.edu/admissions-and-aid/visit-and-connect/visit-programs/mvp"
+},
+{
+  name:   "Perspectives on Pomona",
+  host:   "Pomona College",
+  desc:   "Fly-in program for underrepresented prospective students to experience Pomona's campus, its Claremont Consortium resources, and one of the nation's most generous financial aid programs.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Claremont, CA",
+  dl:     null,
+  url:    "https://www.pomona.edu/admissions/apply/virtual-perspectives-pomona-pop"
+},
+{
+  name:   "Multicultural Visit Programs",
+  host:   "Reed College",
+  desc:   "Funded campus visit programs for multicultural and underrepresented students to engage with Reed's rigorous academic culture, thesis tradition, and Portland community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Portland, OR",
+  dl:     null,
+  url:    "https://www.reed.edu/admission-aid/visit/multicultural-programs.html"
+},
+{
+  name:   "STAR — Science, Technology, & Arts at Rensselaer",
+  host:   "Rensselaer Polytechnic Institute",
+  desc:   "Fly-in for underrepresented prospective students in STEM and the arts to explore RPI's research facilities, student life, and scholarship opportunities.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Troy, NY",
+  dl:     null,
+  url:    "https://admissions.rpi.edu/STAR"
+},
+{
+  name:   "Discover Scripps",
+  host:   "Scripps College",
+  desc:   "Funded fly-in for underrepresented prospective students to experience Scripps' women's college community, interdisciplinary curriculum, and the broader Claremont Consortium.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Claremont, CA",
+  dl:     null,
+  url:    "https://www.scrippscollege.edu/admission/student-access"
+},
+{
+  name:   "Women of Distinction",
+  host:   "Smith College",
+  desc:   "Fly-in program for high-achieving women from underrepresented backgrounds to explore Smith's all-women environment, Five College Consortium, and exceptional financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Northampton, MA",
+  dl:     null,
+  url:    "https://www.smith.edu/women-distinction-program"
+},
+{
+  name:   "Discover Swarthmore",
+  host:   "Swarthmore College",
+  desc:   "Fully funded fly-in for first-generation and underrepresented students to experience Swarthmore's intellectually intense campus, honors program, and generous no-loan financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Swarthmore, PA",
+  dl:     null,
+  url:    "https://www.swarthmore.edu/admissions-aid/discover-swarthmore-fly-program"
+},
+{
+  name:   "Fly-In Program",
+  host:   "Sweet Briar College",
+  desc:   "Visit reimbursement fly-in program for prospective students to explore Sweet Briar's women's college campus in the Blue Ridge Mountains and its equestrian and leadership programs.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Sweet Briar, VA",
+  dl:     null,
+  url:    "https://sbc.edu/admissions/visit-sweet-briar-with-our-visit-reimbursement-program/"
+},
+{
+  name:   "Bantam Bound",
+  host:   "Trinity College",
+  desc:   "Fly-in for underrepresented and first-generation prospective students to explore Trinity's Hartford campus, academics, internship opportunities in the city, and student life.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Hartford, CT",
+  dl:     null,
+  url:    "https://www.trincoll.edu/admissions/bantam-bound/"
+},
+{
+  name:   "Voices of Tufts Diversity Experience",
+  host:   "Tufts University",
+  desc:   "Overnight fly-in for underrepresented prospective students to experience Tufts' activist, intellectually curious community, attend classes, and connect with current students.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Medford, MA",
+  dl:     null,
+  url:    "https://admissions.tufts.edu/voices/voices-home/"
+},
+{
+  name:   "PreviewTU",
+  host:   "Tulane University",
+  desc:   "Multicultural access fly-in for underrepresented and first-generation students to experience Tulane's vibrant New Orleans campus, academics, and community engagement programs.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "New Orleans, LA",
+  dl:     null,
+  url:    "https://admission.tulane.edu/student-life/diversity/multicultural-access-programs/previewtu-faqs"
+},
+{
+  name:   "Getting to Know U Weekend",
+  host:   "Union College",
+  desc:   "Funded weekend fly-in for underrepresented prospective students to explore Union's unique combination of liberal arts and engineering, campus culture, and financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Schenectady, NY",
+  dl:     null,
+  url:    "https://www.union.edu/admissions/getting-to-know-union"
+},
+{
+  name:   "Fly-In Program",
+  host:   "University of Evansville",
+  desc:   "Travel reimbursement fly-in policy for prospective students from underrepresented backgrounds to visit the University of Evansville's campus and explore scholarships.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Evansville, IN",
+  dl:     null,
+  url:    "https://www.evansville.edu/visit/flyinpolicy.cfm"
+},
+{
+  name:   "All-Access Weekend",
+  host:   "University of Michigan — Ross School of Business",
+  desc:   "Fly-in for underrepresented prospective business students to experience Ross's BBA program, case competitions, student organizations, and Ann Arbor campus life.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Ann Arbor, MI",
+  dl:     null,
+  url:    "https://michiganross.umich.edu/about/events/all-access-weekend"
+},
+{
+  name:   "Penn Early Exploration Program",
+  host:   "University of Pennsylvania",
+  desc:   "Fly-in for underrepresented and first-generation rising seniors to explore Penn's four schools, campus life, and one of the most generous financial aid programs in the Ivy League.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Philadelphia, PA",
+  dl:     null,
+  url:    "https://admissions.upenn.edu/penn-early-exploration-program-0"
+},
+{
+  name:   "Multicultural Visitation Experience",
+  host:   "University of Rochester",
+  desc:   "Funded fly-in for multicultural and underrepresented prospective students to experience Rochester's open curriculum, research opportunities, and campus community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Rochester, NY",
+  dl:     null,
+  url:    "https://admissions.rochester.edu/visit/multicultural-visitation-program/"
+},
+{
+  name:   "DIVE — Diversity and Inclusion Visit Experience",
+  host:   "Washington and Lee University",
+  desc:   "Fully funded fly-in for underrepresented and first-generation prospective students to explore W&L's honor system, student life, and remarkable financial aid program.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Lexington, VA",
+  dl:     null,
+  url:    "https://www.wlu.edu/admissions/visit/dive/"
+},
+{
+  name:   "Preview Days",
+  host:   "Washington University in St. Louis",
+  desc:   "Fly-in for underrepresented prospective students to experience WashU's campus, interdisciplinary academics, research centers, and exceptional need-based financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "St. Louis, MO",
+  dl:     null,
+  url:    "https://admissions.wustl.edu/preview-days/"
+},
+{
+  name:   "Wellesley VOICE",
+  host:   "Wellesley College",
+  desc:   "Fly-in for underrepresented prospective students to experience Wellesley's all-women academic environment, strong alumnae network, and no-loan financial aid policy.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Wellesley, MA",
+  dl:     null,
+  url:    "https://www.wellesley.edu/admission-aid/connect-with-wellesley/virtual-visits-and-sessions/voice"
+},
+{
+  name:   "WesExplore",
+  host:   "Wesleyan University",
+  desc:   "Overnight fly-in for underrepresented and first-generation prospective students to engage with Wesleyan's open curriculum, activist culture, and vibrant arts community.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Middletown, CT",
+  dl:     null,
+  url:    "https://www.wesleyan.edu/admission/visit-connect/wesexplore.html"
+},
+{
+  name:   "Visit Scholarship Program",
+  host:   "Whitman College",
+  desc:   "Funded fly-in scholarship for prospective students from underrepresented and low-income backgrounds to visit Whitman's campus in Washington State and explore financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Walla Walla, WA",
+  dl:     null,
+  url:    "https://www.whitman.edu/admission-and-aid/visit-whitman/visit-scholarship-program"
+},
+{
+  name:   "Window on Williams",
+  host:   "Williams College",
+  desc:   "Fully funded fly-in for underrepresented and first-generation prospective students to experience Williams' tutorial-style academics, campus life, and no-loan financial aid.",
+  grades: [11, 12],
+  cost:   "Free",
+  loc:    "Williamstown, MA",
+  dl:     null,
+  url:    "https://www.williams.edu/admission-aid/wow/"
+},
+
+  ]
+
+};
+
+/* ================================================================
+   APP LOGIC — you don't need to edit anything below this line
+================================================================ */
+
+const TABS = [
+  { id: "general",    label: "General" },
+  { id: "stem",       label: "STEM" },
+  { id: "precollege", label: "Pre-college" },
+  { id: "flyIn",      label: "Fly-in programs" }
+];
+
+let state = { tab: "general", q: "", grade: "", cost: "", loc: "", sort: "deadline" };
+
+function daysLeft(dl) {
+  if (!dl) return null;
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.ceil((new Date(dl + "T00:00:00") - now) / 86400000);
+}
+
+function fmtDate(dl) {
+  return new Date(dl + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function deadlineBadge(dl) {
+  if (!dl) return '<span class="badge b-rolling">Rolling</span>';
+  const n = daysLeft(dl);
+  if (n < 0)  return '<span class="badge b-closed">Closed</span>';
+  if (n <= 14) return `<span class="badge b-urgent">${n}d left</span>`;
+  if (n <= 45) return `<span class="badge b-soon">${fmtDate(dl)}</span>`;
+  return `<span class="badge b-ok">${fmtDate(dl)}</span>`;
+}
+
+function costBadge(cost) {
+  if (cost === "Free")                   return '<span class="badge b-free">Free</span>';
+  if (cost === "Financial Aid Available") return '<span class="badge b-aid">Aid available</span>';
+  return '<span class="badge b-paid">Paid</span>';
+}
+
+function hasFilter() { return state.q || state.grade || state.cost || state.loc; }
+
+function getFiltered() {
+  let ps = DATA[state.tab] || [];
+  const q = state.q.toLowerCase();
+  if (q)        ps = ps.filter(p => p.name.toLowerCase().includes(q) || p.host.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+  if (state.grade) ps = ps.filter(p => p.grades.includes(+state.grade));
+  if (state.cost)  ps = ps.filter(p => p.cost === state.cost);
+  if (state.loc)   ps = ps.filter(p => p.loc === state.loc);
+  ps = [...ps].sort((a, b) => {
+    if (state.sort === "name") return a.name.localeCompare(b.name);
+    if (!a.dl) return 1; if (!b.dl) return -1;
+    return new Date(a.dl) - new Date(b.dl);
+  });
+  return ps;
+}
+
+function updateLocFilter() {
+  const locs = [...new Set((DATA[state.tab] || []).map(p => p.loc))].sort();
+  document.getElementById("fl").innerHTML =
+    '<option value="">All locations</option>' +
+    locs.map(l => `<option value="${l}"${state.loc === l ? " selected" : ""}>${l}</option>`).join("");
+}
+
+function clearFilters() {
+  state.q = state.grade = state.cost = state.loc = "";
+  document.getElementById("fq").value = "";
+  document.getElementById("fg").value = "";
+  document.getElementById("fc").value = "";
+  document.getElementById("btn-clear").style.display = "none";
+  updateLocFilter();
+  render();
+}
+
+function render() {
+  const filtered = getFiltered();
+  const total = (DATA[state.tab] || []).length;
+  document.getElementById("meta").textContent =
+    `Showing ${filtered.length} of ${total} programs${hasFilter() ? " · filters active" : ""}`;
+  document.getElementById("btn-clear").style.display = hasFilter() ? "inline" : "none";
+
+  const grid = document.getElementById("grid");
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty">No programs match your filters. <button onclick="clearFilters()">Clear filters</button></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div class="card">
+      <div>
+        <div class="card-org">${p.host}</div>
+        <div class="card-name">${p.name}</div>
+      </div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="badges">${costBadge(p.cost)} ${deadlineBadge(p.dl)}</div>
+      <div class="card-details">
+        <span>Location: ${p.loc}</span>
+        <span>Eligible grades: ${p.grades.join(", ")}</span>
+      </div>
+      <a href="${p.url}" target="_blank" rel="noreferrer" class="card-link">Learn more →</a>
+    </div>`).join("");
+}
+
+function init() {
+  const total = Object.values(DATA).flat().length;
+  document.getElementById("total-pill").textContent = `${total} programs`;
+
+  const nav = document.getElementById("tabs");
+  nav.innerHTML = TABS.map(t =>
+    `<button class="tab${state.tab === t.id ? " active" : ""}" data-t="${t.id}">
+      ${t.label}<span class="count">(${(DATA[t.id] || []).length})</span>
+    </button>`
+  ).join("");
+
+  nav.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => {
+    state.tab = btn.dataset.t;
+    state.loc = "";
+    nav.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("fl").value = "";
+    updateLocFilter();
+    render();
+  }));
+
+  const sync = () => {
+    state.q    = document.getElementById("fq").value;
+    state.grade = document.getElementById("fg").value;
+    state.cost  = document.getElementById("fc").value;
+    state.loc   = document.getElementById("fl").value;
+    state.sort  = document.getElementById("fs").value;
+    document.getElementById("btn-clear").style.display = hasFilter() ? "inline" : "none";
+    render();
+  };
+
+  document.getElementById("fq").addEventListener("input",  sync);
+  document.getElementById("fg").addEventListener("change", sync);
+  document.getElementById("fc").addEventListener("change", sync);
+  document.getElementById("fl").addEventListener("change", sync);
+  document.getElementById("fs").addEventListener("change", sync);
+  document.getElementById("btn-clear").addEventListener("click", clearFilters);
+
+  updateLocFilter();
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
