@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Opportunities Hub</title>
 <style>
-  /* ─── GOOGLE FONTS ─────────────────────────────────── */
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
-  /* ─── DESIGN TOKENS ────────────────────────────────── */
   :root {
     --bg:        #f5f4f0;
     --surface:   #ffffff;
@@ -32,7 +30,6 @@
     --mono: 'DM Mono', monospace;
   }
 
-  /* ─── RESET ────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
@@ -43,10 +40,8 @@
     min-height: 100vh;
   }
 
-  /* ─── LAYOUT ───────────────────────────────────────── */
   .page { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
 
-  /* ─── HEADER ───────────────────────────────────────── */
   header {
     padding: 2.25rem 0 1.75rem;
     border-bottom: 1px solid var(--border);
@@ -61,7 +56,6 @@
     border: 1px solid #c3cffa;
   }
 
-  /* ─── TABS ─────────────────────────────────────────── */
   nav.tabs {
     display: flex;
     gap: 0;
@@ -100,7 +94,6 @@
     margin-left: 4px;
   }
 
-  /* ─── FILTER BAR ────────────────────────────────────── */
   .filters {
     display: flex;
     flex-wrap: wrap;
@@ -149,7 +142,6 @@
     padding: 10px 0 4px;
   }
 
-  /* ─── PROGRAM GRID ──────────────────────────────────── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -157,7 +149,6 @@
     margin-top: 4px;
   }
 
-  /* ─── CARD ──────────────────────────────────────────── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -231,7 +222,6 @@
   }
   .card-link:hover { background: var(--surface); border-color: var(--border2); }
 
-  /* ─── EMPTY STATE ───────────────────────────────────── */
   .empty {
     grid-column: 1 / -1;
     padding: 3rem;
@@ -244,7 +234,6 @@
     font-size: 14px; color: var(--accent); cursor: pointer; text-decoration: underline;
   }
 
-  /* ─── RESPONSIVE ────────────────────────────────────── */
   @media (max-width: 600px) {
     h1 { font-size: 22px; }
     .grid { grid-template-columns: 1fr; }
@@ -303,36 +292,11 @@
    ██║  ██║██╔══██║   ██║   ██╔══██║
    ██████╔╝██║  ██║   ██║   ██║  ██║
    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
-
-   HOW TO ADD A PROGRAM
-   ━━━━━━━━━━━━━━━━━━━━
-   1. Find the right section below (general, stem, precollege, or flyIn)
-   2. Copy an existing entry (the { ... } block including the trailing comma)
-   3. Paste it at the END of that section, before the closing ]
-   4. Fill in the fields:
-
-   name   → Full program name (string)
-   host   → Organization running it (string)
-   desc   → 1–2 sentence description (string)
-   grades → Array of eligible grade numbers, e.g. [10, 11, 12]
-   cost   → Exactly one of: "Free" | "Financial Aid Available" | "Paid"
-   loc    → Location string, e.g. "Boston, MA" or "National" or "Virtual"
-   dl     → Deadline in YYYY-MM-DD format, e.g. "2026-05-15"
-             Leave as null if rolling / no deadline
-   url    → Full URL including https://
-
-   SECTIONS
-   ━━━━━━━━
-   general   → Tab 1: General scholarships & leadership programs
-   stem      → Tab 2: STEM research & technical programs
-   precollege→ Tab 3: Pre-college / university summer programs
-   flyIn     → Tab 4: Fly-in campus visit programs
-
 ================================================================ */
 
 const DATA = {
 
-  /* ── TAB 1: GENERAL ──────────────────────────────────────────── */
+  /*TAB 1: GENERAL*/
   general: [
     {
       name:   "QuestBridge National College Match",
@@ -394,7 +358,6 @@ const DATA = {
       dl:     "2026-09-01",
       url:    "https://www.nationalmerit.org"
     },
-    /* ── ADD MORE GENERAL PROGRAMS BELOW THIS LINE ── */
     {
   name:   "JCamp",
   host:   "Asian American Journalists Association",
@@ -868,7 +831,7 @@ const DATA = {
 
   ],
 
-  /* ── TAB 2: STEM ─────────────────────────────────────────────── */
+  /* TAB 2: STEM  */
   stem: [
     {
       name:   "Research Science Institute (RSI)",
@@ -940,8 +903,6 @@ const DATA = {
       dl:     "2026-06-01",
       url:    "https://www.idtech.com"
     },
-    /* ── ADD MORE STEM PROGRAMS BELOW THIS LINE ── */
-
     {
   name:   "High School Summer Research Program",
   host:   "Albert Einstein College of Medicine",
@@ -1285,7 +1246,7 @@ const DATA = {
 
   ],
 
-  /* ── TAB 3: PRE-COLLEGE ──────────────────────────────────────── */
+  /*  TAB 3: PRE-COLLEGE  */
   precollege: [
     {
       name:   "Yale Young Global Scholars",
@@ -1357,7 +1318,6 @@ const DATA = {
       dl:     "2026-04-30",
       url:    "https://precollege.brown.edu"
     },
-    /* ── ADD MORE PRE-COLLEGE PROGRAMS BELOW THIS LINE ── */
     {
   name:   "Adelphi Summer Pre-College Program",
   host:   "Adelphi University",
@@ -1841,7 +1801,7 @@ const DATA = {
 
   ],
 
-  /* ── TAB 4: FLY-IN PROGRAMS ──────────────────────────────────── */
+  /* TAB 4: FLY-IN PROGRAMS */
   flyIn: [
     {
       name:   "QuestBridge College Prep Scholars",
@@ -1913,7 +1873,6 @@ const DATA = {
       dl:     "2026-10-20",
       url:    "https://admissions.cornell.edu"
     },
-    /* ── ADD MORE FLY-IN PROGRAMS BELOW THIS LINE ── */
   {
   name:   "Access to Amherst",
   host:   "Amherst College",
@@ -2509,9 +2468,7 @@ const DATA = {
 
 };
 
-/* ================================================================
-   APP LOGIC — you don't need to edit anything below this line
-================================================================ */
+/* APP LOGIC */
 
 const TABS = [
   { id: "general",    label: "General" },
